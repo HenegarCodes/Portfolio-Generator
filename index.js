@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-const HTML =  ({ name, location, github, linkedin})
+const HTML =  ({ firstname, location, github, linkedin})
     `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -13,7 +13,7 @@ const HTML =  ({ name, location, github, linkedin})
     <body>
       <header class="p-5 mb-4 header bg-light">
         <div class="container">
-          <h1 class="display-4">Hi! My name is ${name}</h1>
+          <h1 class="display-4">Hi! My name is ${firstname}</h1>
           <p class="lead">I am from ${location}.</p>
           <h3>Example heading <span class="badge bg-secondary">Contact Me</span></h3>
           <ul class="list-group">
@@ -36,7 +36,7 @@ const portfolioQuestions = [
     },
     {
       type: 'input',
-      name: 'Location',
+      name: 'location',
       message: 'In what city do you reside in?',
     },
     {
@@ -64,14 +64,10 @@ const portfolioQuestions = [
 
 
 
-  function writeToFle(fileName, data) {
-    return fs.writeFileSync(path.join(process.cwd(), fileName), data)
-  }
-
-  function init() {
-    inquirer.createPromptModule(portfolioQuestions).then((inquirerResponses) => {
-        console.log('Generating Portfolio...');
-        writeToFle()
-    })
-  }
-
+ inquirer.createPromptModule(portfolioQuestions)
+ .then((answers) => {
+    const htmlContent = generateHTML(answers);
+    fs.writeFileSync('output.html', htmlContent);
+    console.log('HTML file has been Generated');
+ })
+.catch((error) => console.error('error:', error));
